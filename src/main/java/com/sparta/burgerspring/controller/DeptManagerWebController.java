@@ -37,7 +37,7 @@ public class DeptManagerWebController {
     }
 
     @PostMapping("/createManager")
-    public String createTitle(@ModelAttribute("deptMgrToCreate")DeptManager newDeptManager, @ModelAttribute("deptMgrIdToCreate")DeptManagerId newDeptManagerId) {
+    public String createManager(@ModelAttribute("deptMgrToCreate")DeptManager newDeptManager, @ModelAttribute("deptMgrIdToCreate")DeptManagerId newDeptManagerId) {
         newDeptManager.setId(newDeptManagerId);
         if (newDeptManager.getToDate() == null) {
             newDeptManager.setToDate(LocalDate.of(9999, 01, 01));
