@@ -7,6 +7,7 @@ import com.sparta.burgerspring.model.entities.Title;
 import com.sparta.burgerspring.model.entities.TitleId;
 import com.sparta.burgerspring.model.repositories.DeptManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +26,14 @@ public class DeptManagerWebController {
         this.deptManagerRepository = deptManagerRepository;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/department-managers")
     public String getTitle(Model model) {
         model.addAttribute("managers", deptManagerRepository.findAll());
         return "manager/manager";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/department-managers/create")
     public String getDeptMgrToCreate() {
         return "manager/manager-create-form";

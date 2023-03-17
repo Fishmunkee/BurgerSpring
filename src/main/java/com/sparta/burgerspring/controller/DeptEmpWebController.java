@@ -37,6 +37,7 @@ public class DeptEmpWebController {
     }
 
     //create
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/deptEmp/create")
     public String createDeptEmp() {
         return "deptEmp/deptEmp-add-form";
@@ -52,6 +53,7 @@ public class DeptEmpWebController {
     }
 
     //Read
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/deptEmp/find")
     public String findDeptEmp() {
         return "deptEmp/deptEmp-find-form";
@@ -68,6 +70,7 @@ public class DeptEmpWebController {
     }
 
 //    update
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/deptEmp/edit/{deptNo}/{empNo}")
     public String getDeptEmpToEdit(@PathVariable Integer empNo,
                                    @PathVariable String deptNo,

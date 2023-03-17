@@ -29,12 +29,14 @@ public class DepartmentWebController {
         this.employeeRepository = employeeRepository;
     }
 
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/departments")
     public String getAllDepartments(Model model){
         model.addAttribute("departments", departmentRepository.findAll());
         return "/departments/departments";
     }
+
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/departments/deptListByName/{firstName}/{lastName}")
@@ -48,6 +50,7 @@ public class DepartmentWebController {
     public String getDeptToFind() {
         return "/departments/department-find-form";
     }
+
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/findDepartment")
@@ -65,6 +68,7 @@ public class DepartmentWebController {
 //        return "/departments/department-sal-by-name-date-form";
 //    }
 
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("departments/findAvgSalary")
     public String getDeptSalAvgToFind() {
@@ -79,6 +83,7 @@ public class DepartmentWebController {
         return "redirect:/departments/avgSalByDeptNameAndDate/" + nameDate;
     }
 
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/departments/avgSalByDeptNameAndDate/{deptName}/{date}")
     public String getAvgSalByDeptNameAndDate(Model model, @PathVariable String deptName, @PathVariable LocalDate date) {
@@ -86,11 +91,14 @@ public class DepartmentWebController {
         return "/departments/department-sal-by-name-date";
     }
 
+
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/departments/create")
     public String deptToCreate() {
         return "/departments/department-create-form";
     }
+
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/createDepartment/")
@@ -99,6 +107,7 @@ public class DepartmentWebController {
         return "/departments/department-create-success";
     }
 
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/departments/edit/{id}")
     public String deptToEdit(Model model, @PathVariable String id) {
@@ -106,6 +115,7 @@ public class DepartmentWebController {
         model.addAttribute("deptToEdit", department);
         return "/departments/department-edit-form";
     }
+
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
