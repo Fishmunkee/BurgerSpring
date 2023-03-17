@@ -77,11 +77,11 @@ public class DeptEmpWebController {
         model.addAttribute("employeeToEdit", deptEmp);
         return "deptEmp/deptEmp-edit-form";
     }
-    @PostMapping("/updateEmployee")
-    public String updateEmployee(@ModelAttribute("employeeToEdit")Employee editedEmployee) {
-        deptEmpRepository.saveAndFlush(editedEmployee);
-        return "fragments/edit-success";
-    }
+//    @PostMapping("/updateEmployee")
+//    public String updateEmployee(@ModelAttribute("employeeToEdit")Employee editedEmployee) {
+//        deptEmpRepository.saveAndFlush(editedEmployee);
+//        return "fragments/edit-success";
+//    }
 //
 //    //delete
 //    @GetMapping("/employee/delete/{id}")
