@@ -2,6 +2,7 @@ package com.sparta.burgerspring.controller;
 
 import com.sparta.burgerspring.model.entities.Salary;
 import com.sparta.burgerspring.model.entities.SalaryId;
+import com.sparta.burgerspring.model.repositories.DepartmentRepository;
 import com.sparta.burgerspring.model.repositories.SalaryRepository;
 import com.sparta.burgerspring.service.EmployeeService;
 import com.sparta.burgerspring.service.SalaryService;
@@ -19,11 +20,14 @@ public class SalaryWebController {
     private final SalaryService salaryService;
     private final EmployeeService employeeService;
     private final SalaryRepository salaryRepository;
+    private final DepartmentRepository departmentRepository;
 
-    public SalaryWebController(SalaryService salaryService, EmployeeService employeeService, SalaryRepository salaryRepository) {
+    public SalaryWebController(SalaryService salaryService, EmployeeService employeeService, SalaryRepository salaryRepository,
+                               DepartmentRepository departmentRepository) {
         this.salaryService = salaryService;
         this.employeeService = employeeService;
         this.salaryRepository = salaryRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -130,5 +134,20 @@ public class SalaryWebController {
 //        model.addAttribute("salaries", salaryRepository.findAll());
 //        return "salary/salaries";
 //    }
+@GetMapping("/salary/averages")
+    public String getSalariesAverageByDepartmentAndDateDefault(Model model){
+        model.addAttribute("departments",departmentRepository.findAll());
+        model.addAttribute("dept","");
+        model.addAttribute("average", "Choose a department and see what the average salary was at the given time!");
+        return "/salary/salary-average.html";
+}
+    @GetMapping("/salary/averages/")
+    public String getSalariesAverageByDepartmentAndDate(Model model,@RequestParam String department, @RequestParam LocalDate date){
+        model.addAttribute("departments",departmentRepository.findAll());
+        System.out.println(departmentRepository.getListOfSalariesByDept(department,date));
+        model.addAttribute("average", "The average salary of those working in this department at this given time is £" + departmentRepository.getListOfSalariesByDept(department,date));
+
+        return "/salary/salary-average.html";
+    }
 
 }
