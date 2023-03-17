@@ -66,7 +66,7 @@ public class DeptEmpWebController {
     }
 
 //    update
-    @GetMapping("/deptEmp/edit/{deptNo}/{empNo}")
+    @GetMapping("/deptEmp/edit/{empNo}/{deptNo}")
     public String getDeptEmpToEdit(@PathVariable Integer empNo,
                                    @PathVariable String deptNo,
                                    Model model) {
@@ -77,18 +77,21 @@ public class DeptEmpWebController {
         model.addAttribute("employeeToEdit", deptEmp);
         return "deptEmp/deptEmp-edit-form";
     }
-    @PostMapping("/updateEmployee")
-    public String updateEmployee(@ModelAttribute("employeeToEdit")Employee editedEmployee) {
-        deptEmpRepository.saveAndFlush(editedEmployee);
+    @PostMapping("/updateDeptEmp")
+    public String updateEmployee(@ModelAttribute("DeptEmpToEdit")DeptEmp editedDeptEmp) {
+        deptEmpRepository.saveAndFlush(editedDeptEmp);
         return "fragments/edit-success";
     }
-//
-//    //delete
-//    @GetMapping("/employee/delete/{id}")
-//    public String deleteEmployee(@PathVariable Integer id) {
-//        deptEmpRepository.deleteById(id);
-//        return "fragments/delete-success";
-//    }
+
+    //delete
+    @GetMapping("/deptEmp/delete/{empNo}/{deptNo}")
+    public String deleteEmployee(@PathVariable Integer empNo,@PathVariable String deptNo) {
+        DeptEmpId deptEmpId=new DeptEmpId();
+        deptEmpId.setEmpNo(empNo);
+        deptEmpId.setDeptNo(deptNo);
+        deptEmpRepository.deleteById(deptEmpId);
+        return "fragments/delete-success";
+    }
 
 
 

@@ -9,17 +9,17 @@
 <div th:insert="fragments/style"></div>
 <h1>Employee Edit Form</h1>
 <form th:action="@{/updateDeptEmp}" th:object="${employeeToEdit}" method="post">
-    <label for="empNo">Employee ID</label>
-    <input type="text" id="empNo" name="empNo"/><br/>
+<!--    <label for="empNo">Employee ID</label>-->
+    <input type="hidden" id="empNo" name="empNo" th:field="*{id.empNo}"/><br/>
 
-    <label for="deptNo">Department ID</label>
-    <input type="text" id="deptNo" name="deptNo"/><br/>
+<!--    <label for="deptNo">Department ID</label>-->
+    <input type="hidden" id="deptNo" name="deptNo" th:field="*{id.deptNo}"/><br/>
 
     <label for="fromDate">From Date</label>
-    <input type="text" id="fromDate" name="fromDate"/><br/>
+    <input type="text" id="fromDate" name="fromDate" th:field="*{fromDate}"/><br/>
 
     <label for="toDate">To Date</label>
-    <input type="text" id="toDate" name="toDate"/><br/>
+    <input type="text" id="toDate" name="toDate" th:field="*{toDate}"/><br/>
 
     <input type="submit" value="Update"/>
 </form>
