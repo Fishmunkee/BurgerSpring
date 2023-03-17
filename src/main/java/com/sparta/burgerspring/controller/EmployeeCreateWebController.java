@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class EmployeeCreateWebController {
@@ -37,6 +38,7 @@ public class EmployeeCreateWebController {
 
     @PostMapping("/employeecreationform")
     public String createEmployee(@ModelAttribute("employeeToCreate")EmployeeCreation employeeCreation, Model model) {
+        List<String> titles = titleRepository.findAllTitles();
         Employee addedEmployee = new Employee();
         Salary addedSalary = new Salary();
         SalaryId addedSalaryId = new SalaryId();
@@ -50,6 +52,8 @@ public class EmployeeCreateWebController {
         addedEmployee.setFirstName(employeeCreation.getFirstName());
         addedEmployee.setLastName(employeeCreation.getLastName());
         addedEmployee.setHireDate(employeeCreation.getHireDate());
+        BurgerSpringApplication.logger.info(employeeCreation.toString());
+        BurgerSpringApplication.logger.info(addedEmployee.toString());
         employeeRepository.save(addedEmployee);
         addedSalaryId.setEmpNo(employeeCreation.getId());
         addedSalaryId.setFromDate(employeeCreation.getHireDate());
@@ -63,6 +67,7 @@ public class EmployeeCreateWebController {
         addedTitle.setId(addedTitleId);
         addedTitle.setToDate(LocalDate.of(9999,01,01));
         addedTitle.setEmpNo(addedEmployee);
+        if(!titles.contains(employeeCreation.getTitle())){    titleRepository.save(addedTitle);}
         addedDeptEmpId.setDeptNo(employeeCreation.getDeptName());
         addedDeptEmpId.setEmpNo(employeeCreation.getId());
         addedDeptEmp.setId(addedDeptEmpId);
@@ -70,17 +75,21 @@ public class EmployeeCreateWebController {
         addedDeptEmp.setDeptNo(departmentRepository.findById(employeeCreation.getDeptName()).orElse(null));
         addedDeptEmp.setFromDate(employeeCreation.getHireDate());
         addedDeptEmp.setToDate(LocalDate.of(9999,01,01));
-        model.addAttribute("salary", addedSalary);
-        model.addAttribute("title", addedTitle);
-        model.addAttribute("deptEmp", addedDeptEmp);
-//        salaryRepository.save(addedSalary);
-//        titleRepository.save(addedTitle);
-//        deptEmpRepository.save(addedDeptEmp);
-        return "employeecreation/employee-create-checkout";
+//        model.addAttribute("employee", addedEmployee);
+//        model.addAttribute("salary", addedSalary);
+//        model.addAttribute("title", addedTitle);
+//        model.addAttribute("deptEmp", addedDeptEmp);
+        salaryRepository.save(addedSalary);
+        //titleRepository.save(addedTitle);
+        deptEmpRepository.save(addedDeptEmp);
+        return "fragments/create-success";
     }
 
     @PostMapping("/employeecreationcheckout")
-    public String checkoutEmployee(){
+    public String checkoutEmployee(Model model, @ModelAttribute("employeeToSubmit")EmployeeCreation employeeCreation){
+        model.addAttribute("employeeCreateCheckout",employeeCreation);
+        BurgerSpringApplication.logger.info(employeeCreation.toString());
 
+    return "employeecreation/employee-create-checkout";
     }
 }
