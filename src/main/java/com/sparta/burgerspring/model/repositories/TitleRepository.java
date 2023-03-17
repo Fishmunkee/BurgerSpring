@@ -28,6 +28,8 @@ public interface TitleRepository extends JpaRepository<Title, TitleId> {
     @Query(value = "SELECT t FROM Title t WHERE t.id.empNo = :id AND t.id.title = :title")
     Title findByIdAndTitle();
 
+    @Query(value = "SELECT distinct t.id.title FROM Title t")
+    List<String> findAllTitles();
 
 
 }
