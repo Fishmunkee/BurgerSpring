@@ -45,8 +45,8 @@
     <td style="color: #FCFCFD" th:text="${manager.getId().deptNo}"></td>
     <td style="color: #FCFCFD" th:text="${manager.getFromDate()}"></td>
     <td style="color: #FCFCFD" th:text="${manager.getToDate()}"></td>
-    <td><button>Edit</button></td>
-    <td><button>Delete</button></td>
+    <td><a th:href="@{/department-managers/edit/{id}/{deptNo}(id=${manager.id.empNo}, deptNo=${manager.id.deptNo})}"><button>Edit</button></a></td>
+    <td><a th:href="@{/department-managers/delete/{id}/{deptNo}(id=${manager.id.empNo}, deptNo=${manager.id.deptNo})}"><button>Delete</button></a></td>
   </tr>
 </table>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
