@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Salary</title>
+</head>
+<body>
+<form th:action="@{/employeecreationcheckout}" method="post">
+    <label for="id">ID</label>
+    <input type="text" id="id" name="id"/><br/>
+
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName"/><br/>
+
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName"/><br/>
+
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender">
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+    </select>
+
+    <label for="birthDate">birthDate</label>
+    <input type="date" id="birthDate" name="birthDate"/><br/>
+
+    <label for="hireDate">hireDate</label>
+    <input type="date" id="hireDate" name="hireDate"/><br/>
+
+    <label for="salary">Salary</label>
+    <input type="text" id="salary" name="salary"/><br/>
+
+    <!--    <label for="fromDate">From Date</label>-->
+    <!--    <input type="text" id="fromDate" name="fromDate"/><br/>-->
+
+    <label for="title">Title</label> <input type="text" list="titles" class="form-control" id="title" name="title">
+    <datalist id="titles">
+        <option th:each="title:${titles}" class="dropdown-item" th:text="${title}" }
+                th:value="${title}"></option>
+    </datalist>
+
+    <label for="department">Department</label>
+    <select class="form-control" id="department" name="deptName">
+        <option th:each="depts:${departments}" class="dropdown-item" th:text="${depts.deptName}" }
+                th:value="${depts.id}"></option>
+    </select>
+
+    <input type="submit" value="Create"/>
+</form>
+</body>
+</html>
