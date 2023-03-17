@@ -70,8 +70,9 @@ public class DeptEmpWebController {
     }
 
 //    update
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/deptEmp/edit/{deptNo}/{empNo}")
+    @GetMapping("/deptEmp/edit/{empNo}/{deptNo}")
     public String getDeptEmpToEdit(@PathVariable Integer empNo,
                                    @PathVariable String deptNo,
                                    Model model) {
@@ -82,6 +83,7 @@ public class DeptEmpWebController {
         model.addAttribute("employeeToEdit", deptEmp);
         return "deptEmp/deptEmp-edit-form";
     }
+
 //    @PostMapping("/updateEmployee")
 //    public String updateEmployee(@ModelAttribute("employeeToEdit")Employee editedEmployee) {
 //        deptEmpRepository.saveAndFlush(editedEmployee);
@@ -95,9 +97,19 @@ public class DeptEmpWebController {
 //        return "fragments/delete-success";
 //    }
 
+    @PostMapping("/updateDeptEmp")
+    public String updateEmployee(@ModelAttribute("DeptEmpToEdit")DeptEmp editedDeptEmp) {
+        deptEmpRepository.saveAndFlush(editedDeptEmp);
+        return "fragments/edit-success";
+    }
 
-
-
-
-
+    //delete
+    @GetMapping("/deptEmp/delete/{empNo}/{deptNo}")
+    public String deleteEmployee(@PathVariable Integer empNo,@PathVariable String deptNo) {
+        DeptEmpId deptEmpId=new DeptEmpId();
+        deptEmpId.setEmpNo(empNo);
+        deptEmpId.setDeptNo(deptNo);
+        deptEmpRepository.deleteById(deptEmpId);
+        return "fragments/delete-success";
+    }
 }

@@ -28,7 +28,23 @@ public class PaygapWebController {
     @GetMapping(value = "/paygap/{department}")
     public String getPaygap(@PathVariable String department, Model model){
         model.addAttribute("departments", departmentRepository.findAll());
-        model.addAttribute("output", salaryService.genderPaygap(department));
+        String str = salaryService.genderPaygap(department);
+        model.addAttribute("output", str);
+        str = str.replaceAll("[^\\d.]", "");
+        if(str.isEmpty()){
+            str = "0";
+        }
+        Double percentage = Double.parseDouble(str);
+        if(str.equals("0")){
+            str = "Check one or all of our departments to see the paygap between genders";
+        }
+        else if(percentage>2||percentage<-2){
+            str = "Oh no, there seems to be a substantial paygap";
+        } else if (percentage<2&&percentage>-2) {
+            str = "Congrats, there is no substantial paygap";
+
+        }
+        model.addAttribute("percentage", str);
         return "/paygap/paygap.html";
     }
 
@@ -36,17 +52,8 @@ public class PaygapWebController {
     @GetMapping(value = "/paygap")
     public String getDefaultAllPaygap(Model model){
         model.addAttribute("departments", departmentRepository.findAll());
+        model.addAttribute("percentage", "Check one or all of our departments to see the paygap between genders");
         return "/paygap/paygap.html";
     }
 
-    private ResponseEntity<String> getStringResponseEntity(String paygapInfo) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("content-type","application/json");
-        ResponseEntity<String> response = null;
-        if(paygapInfo!=null){
-            response = new ResponseEntity<>("{\"message\": \""+paygapInfo+"\" }",
-                    httpHeaders, HttpStatus.OK);
-        }
-        return response;
-    }
 }
