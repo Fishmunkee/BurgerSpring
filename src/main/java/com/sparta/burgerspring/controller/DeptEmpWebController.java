@@ -4,6 +4,7 @@ import com.sparta.burgerspring.BurgerSpringApplication;
 import com.sparta.burgerspring.model.entities.*;
 import com.sparta.burgerspring.model.repositories.DepartmentRepository;
 import com.sparta.burgerspring.model.repositories.DeptEmpRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class DeptEmpWebController {
     }
 
     //find all
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/deptEmps")
     public String getAllDeptEmps(Model model){
         List<DeptEmp> deptEmpList=deptEmpRepository.findAll().subList(0,10);
@@ -35,6 +37,7 @@ public class DeptEmpWebController {
     }
 
     //create
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/deptEmp/create")
     public String createDeptEmp() {
         return "deptEmp/deptEmp-add-form";
@@ -50,6 +53,7 @@ public class DeptEmpWebController {
     }
 
     //Read
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/deptEmp/find")
     public String findDeptEmp() {
         return "deptEmp/deptEmp-find-form";
@@ -66,6 +70,8 @@ public class DeptEmpWebController {
     }
 
 //    update
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/deptEmp/edit/{empNo}/{deptNo}")
     public String getDeptEmpToEdit(@PathVariable Integer empNo,
                                    @PathVariable String deptNo,
@@ -77,6 +83,20 @@ public class DeptEmpWebController {
         model.addAttribute("employeeToEdit", deptEmp);
         return "deptEmp/deptEmp-edit-form";
     }
+
+//    @PostMapping("/updateEmployee")
+//    public String updateEmployee(@ModelAttribute("employeeToEdit")Employee editedEmployee) {
+//        deptEmpRepository.saveAndFlush(editedEmployee);
+//        return "fragments/edit-success";
+//    }
+//
+//    //delete
+//    @GetMapping("/employee/delete/{id}")
+//    public String deleteEmployee(@PathVariable Integer id) {
+//        deptEmpRepository.deleteById(id);
+//        return "fragments/delete-success";
+//    }
+
     @PostMapping("/updateDeptEmp")
     public String updateEmployee(@ModelAttribute("DeptEmpToEdit")DeptEmp editedDeptEmp) {
         deptEmpRepository.saveAndFlush(editedDeptEmp);
@@ -92,10 +112,4 @@ public class DeptEmpWebController {
         deptEmpRepository.deleteById(deptEmpId);
         return "fragments/delete-success";
     }
-
-
-
-
-
-
 }

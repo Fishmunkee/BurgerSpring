@@ -6,6 +6,7 @@ import com.sparta.burgerspring.model.repositories.SalaryRepository;
 import com.sparta.burgerspring.service.EmployeeService;
 import com.sparta.burgerspring.service.SalaryService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,33 +26,39 @@ public class SalaryWebController {
         this.salaryRepository = salaryRepository;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/salary")
     public String salaryHome(){
         return "salary/salary-home";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/salaries")
     public String getSalaries(){
         return "salary/salary-search-form";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/salaries/search")
     public String getSalaryDetails(Model model, @RequestParam Integer empNo) {
         model.addAttribute("salaries", salaryRepository.getDetailsByEmpNo(empNo));
         return "salary/salary";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(value = "/salaries/{salary}")
     public String getEmployeesEarningAboveSalary(Model model, @PathVariable Integer salary){
         model.addAttribute("employees", salaryService.getEmployeeEarningAboveGivenSalary(salary));
         return "salary/salariesemployees";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/salary/create")
     public String getSalaryToCreate() {
         return "salary/salary-create-form";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/createsalary")
     public String createSalary(@ModelAttribute("salaryToCreate")Salary newSalary, @ModelAttribute("salaryIdToCreate")SalaryId newSalaryId){
         newSalary.setId(newSalaryId);
@@ -63,6 +70,7 @@ public class SalaryWebController {
         return "salary/add-salary-success";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/salary/edit/{id}/{fromDate}")
     public String getUpdatedSalaryDetails(@PathVariable Integer id,@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fromDate, Model model) {
         SalaryId salaryId = new SalaryId();
@@ -73,6 +81,7 @@ public class SalaryWebController {
         return "salary/salary-update-form";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/updatesalary")
     public String updateSalary(@ModelAttribute("updatedSalary")Salary updatedSalary, @ModelAttribute("salaryIdToCreate")SalaryId newSalaryId){
         if(updatedSalary.getToDate() == null){
@@ -82,26 +91,31 @@ public class SalaryWebController {
         return "salary/salary-update-success";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/salary/edit")
     public String getSalaryToUpdate(){
         return "salary/salary-to-update-form";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/findsalary")
     public String findSalaryToUpdate(@ModelAttribute("salaryToUpdate") SalaryId foundSalary) {
         return "redirect:/salary/edit/" + foundSalary.getEmpNo() + "/" + foundSalary.getFromDate();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("salary/delete")
     public String getSalaryToDelete(){
         return "salary/salary-to-delete-form";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/deletesalary")
     public String findSalaryToDelete(@ModelAttribute("salaryToDelete") SalaryId foundSalary) {
         return "redirect:/salary/delete/" + foundSalary.getEmpNo() + "/" + foundSalary.getFromDate();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/salary/delete/{id}/{fromDate}")
     public String deleteSalary(@PathVariable Integer id,@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fromDate){
         SalaryId salaryId = new SalaryId();

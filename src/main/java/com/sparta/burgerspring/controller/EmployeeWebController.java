@@ -8,6 +8,7 @@ import com.sparta.burgerspring.model.entities.Employee;
 import com.sparta.burgerspring.model.repositories.EmployeeRepository;
 import com.sparta.burgerspring.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ public class EmployeeWebController {
         this.employeeService=employeeService;
     }
     //find all
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/employees")
     public String getAllEmployees(Model model){
         List<Employee> employeeList=employeeRepository.findAll().subList(0,10);
@@ -38,10 +40,13 @@ public class EmployeeWebController {
 
 
     //create
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/employee/create")
     public String createEmployee() {
         return "employee/employee-add-form";
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/createEmployee")
     public String createEmployee(@ModelAttribute("employeeToCreate")Employee addedEmployee) {
         employeeRepository.save(addedEmployee);
@@ -49,34 +54,35 @@ public class EmployeeWebController {
     }
 
 
-
-
-
-
 //Read
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/employee/find")
     public String findEmployee() {
         return "employee/employee-find-form";
     }
-@PostMapping("/findEmployeeById")
-public String findEmployee(@ModelAttribute("employeeToFind")Employee foundEmployee,Model model
-) {
-    BurgerSpringApplication.logger.info(foundEmployee.toString());
-    Integer id=foundEmployee.getId();
-    List<Employee> employees;
-    if(id!=null){
-        Employee employee=employeeRepository.findById(id).orElse(null);
-        employees=new ArrayList<Employee>();
-        if (employee != null) {
-            employees.add(employee);
-            model.addAttribute("employees",employees);
-        }
-    } else {
-        model.addAttribute("employees",null);
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/findEmployeeById")
+    public String findEmployee(@ModelAttribute("employeeToFind")Employee foundEmployee,Model model
+    ) {
+        BurgerSpringApplication.logger.info(foundEmployee.toString());
+        Integer id=foundEmployee.getId();
+        List<Employee> employees;
+        if(id!=null){
+            Employee employee=employeeRepository.findById(id).orElse(null);
+            employees=new ArrayList<Employee>();
+            if (employee != null) {
+                employees.add(employee);
+                model.addAttribute("employees",employees);
+            }
+        } else {
+            model.addAttribute("employees",null);
+
+        }
+    return "employee/employee";
     }
-return "employee/employee";
-}
+
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/findEmployeeByName")
     public String findEmployeeByName(@ModelAttribute("employeeToFind")Employee foundEmployee,Model model
     ) {
@@ -104,6 +110,8 @@ return "employee/employee";
         }
         return "employee/employee";
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/findEmployeeByDepartAndDate")
     public String findEmployeeByDeptNameAndDate(LocalDate fromDate, LocalDate toDate, String deptName,
                                Model model
@@ -117,12 +125,15 @@ return "employee/employee";
         return "employee/employee";
     }
     //update
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/employee/edit/{id}")
     public String getEmployeeToEdit(@PathVariable Integer id, Model model) {
         Employee employee = employeeRepository.findById(id).orElse(null);
         model.addAttribute("employeeToEdit", employee);
         return "employee/employee-edit-form";
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/updateEmployee")
     public String updateEmployee(@ModelAttribute("employeeToEdit")Employee editedEmployee) {
         employeeRepository.saveAndFlush(editedEmployee);
@@ -130,6 +141,7 @@ return "employee/employee";
     }
 
     //delete
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/employee/delete/{id}")
     public String deleteEmployee(@PathVariable Integer id) {
         employeeRepository.deleteById(id);
