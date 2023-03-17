@@ -4,6 +4,7 @@ import com.sparta.burgerspring.BurgerSpringApplication;
 import com.sparta.burgerspring.model.entities.*;
 import com.sparta.burgerspring.model.repositories.DepartmentRepository;
 import com.sparta.burgerspring.model.repositories.DeptEmpRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class DeptEmpWebController {
     }
 
     //find all
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/deptEmps")
     public String getAllDeptEmps(Model model){
         List<DeptEmp> deptEmpList=deptEmpRepository.findAll().subList(0,10);
